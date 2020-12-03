@@ -95,7 +95,7 @@ DATABASES = {
        'NAME' : 'thingy-life', #as named on server
       
        'CLIENT': {
-       'host' : 'mongodb+srv://admin:admin@cluster0.g2xls.mongodb.net/hungryWanderer?retryWrites=true&w=majority',
+       'host' : 'mongodb+srv://admin:admin@cluster0.g2xls.mongodb.net/thingy-life?retryWrites=true&w=majority',
            
         }
 #that is your connection link with your username,password and db name,here i created a db using mlabs of mongodb       'USER' : '<dbuser>',       'PASSWORD' : '<dbpassword>',
