@@ -6,6 +6,7 @@ from bson import ObjectId
 import datetime
 import jwt
 import time
+import os
 
 from .models import Post    
 from .serializers import PostSerializer
@@ -17,7 +18,7 @@ def posts_list(request):
     if token is None:
         return Response({"Error" : "Token not provided"}, status=status.HTTP_401_UNAUTHORIZED)
         
-    user = jwt.decode(token,"SECRET_KEY")
+    user = jwt.decode(token, os.environ.get("JWT_KEY"))
     if user is None:
         return Response({"Error" : "Invalid Token"}, status=status.HTTP_401_UNAUTHORIZED)
 
