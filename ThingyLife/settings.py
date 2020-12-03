@@ -150,5 +150,5 @@ AWS_SECRET_ACCESS_KEY= os.environ.get("AWS_SECRET_ACCESS_KEY")
 AWS_STORAGE_BUCKET_NAME="thingy-life"
 AWS_S3_REGION_NAME= "us-east-2"
 
-django_heroku.settings(locals())
+django_heroku.settings(locals(), databases=False)
 
