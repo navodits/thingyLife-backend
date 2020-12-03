@@ -6,7 +6,9 @@ from django.shortcuts import render
 from django.contrib.auth import authenticate
 from .serializers import UserSerializer
 import jwt
+import os
 # Create your views here.
+jwtKey = os.environ.get("JWT_KEY")
 
 @api_view(['POST'])
 def adduser(request):
@@ -17,7 +19,7 @@ def adduser(request):
         if user:
             payload = serializer.data
             del payload['username']
-            token = jwt.encode(payload, "SECRET_KEY")
+            token = jwt.encode(payload, jwtKey)
             payload['token'] = token
             return Response(payload, status=status.HTTP_201_CREATED)
     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
@@ -36,7 +38,7 @@ def login(request):
                 'first_name' : user.first_name,
                 'last_name' : user.last_name 
             }
-    jwt_token = jwt.encode(payload, "SECRET_KEY")
+    jwt_token = jwt.encode(payload, jwtKey)
     
     return Response(jwt_token,
                     status=status.HTTP_200_OK)
