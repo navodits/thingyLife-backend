@@ -30,7 +30,7 @@ ALLOWED_HOSTS = []
 
 
 # Application definition
-CORS_ORIGIN_ALLOW_ALL=True
+CORS_ORIGIN_ALLOW_ALL = True
 CORS_ALLOW_CREDENTIALS = False
 
 CORS_ALLOW_HEADERS = ['x-auth-token', 'content-type']
@@ -47,10 +47,11 @@ INSTALLED_APPS = [
     'corsheaders',
     'thingsHappend',
     'users',
-    'storages'
+    'storages',
+    'photographs'
 ]
 REST_FRAMEWORK = {
-  
+
 }
 
 MIDDLEWARE = [
@@ -89,17 +90,17 @@ WSGI_APPLICATION = 'ThingyLife.wsgi.application'
 # https://docs.djangoproject.com/en/3.0/ref/settings/#databases
 
 DATABASES = {
-   'default': {
-      'ENGINE' : 'djongo',
-      
-       'NAME' : 'thingy-life', #as named on server
-      
-       'CLIENT': {
-       'host' : 'mongodb+srv://admin:admin@cluster0.g2xls.mongodb.net/thingy-life?retryWrites=true&w=majority',
-           
+    'default': {
+        'ENGINE': 'djongo',
+
+        'NAME': 'thingy-life',  # as named on server
+
+        'CLIENT': {
+            'host': 'mongodb+srv://admin:admin@cluster0.g2xls.mongodb.net/thingy-life?retryWrites=true&w=majority',
+
         }
-#that is your connection link with your username,password and db name,here i created a db using mlabs of mongodb       'USER' : '<dbuser>',       'PASSWORD' : '<dbpassword>',
-   }
+        # that is your connection link with your username,password and db name,here i created a db using mlabs of mongodb       'USER' : '<dbuser>',       'PASSWORD' : '<dbpassword>',
+    }
 }
 
 
@@ -122,7 +123,6 @@ AUTH_PASSWORD_VALIDATORS = [
 ]
 
 
-
 # Internationalization
 # https://docs.djangoproject.com/en/3.0/topics/i18n/
 
@@ -136,19 +136,17 @@ USE_L10N = True
 
 USE_TZ = True
 
-DEFAULT_FILE_STORAGE = 'my_django_app.custom_storage.MediaStorage'
-
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/3.0/howto/static-files/
 
 STATIC_URL = '/static/'
-DEFAULT_FILE_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
+DEFAULT_FILE_STORAGE = 'my_django_app.custom_storage.MediaStorage'
 STATICFILES_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
 AWS_ACCESS_KEY_ID = os.environ.get("AWS_ACCESS_KEY_ID")
-AWS_SECRET_ACCESS_KEY= os.environ.get("AWS_SECRET_ACCESS_KEY")
-AWS_STORAGE_BUCKET_NAME="thingy-life"
-AWS_S3_REGION_NAME= "us-east-2"
+AWS_SECRET_ACCESS_KEY = os.environ.get("AWS_SECRET_ACCESS_KEY")
+AWS_STORAGE_BUCKET_NAME = "thingy-life"
+AWS_S3_REGION_NAME = "us-east-2"
+AWS_QUERYSTRING_AUTH = False
 
 django_heroku.settings(locals(), databases=False)
-

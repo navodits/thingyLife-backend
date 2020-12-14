@@ -8,14 +8,15 @@ from .serializers import UserSerializer
 import jwt
 import os
 # Create your views here.
-jwtKey = os.environ.get("JWT_KEY")
+
 
 @api_view(['POST'])
 def adduser(request):
-    
+
     serializer = UserSerializer(data=request.data)
     if serializer.is_valid():
         user = serializer.save()
+        jwtKey = "SECRET_KEY"
         if user:
             payload = serializer.data
             del payload['username']
@@ -24,21 +25,22 @@ def adduser(request):
             return Response(payload, status=status.HTTP_201_CREATED)
     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
+
 @api_view(['POST'])
 def login(request):
     username = request.data.get("username")
     password = request.data.get("password")
     user = authenticate(username=username, password=password)
-
+    jwtKey = "SECRET_KEY"
     if not user:
         return Response({'error': 'Invalid Credentials'},
                         status=status.HTTP_400_BAD_REQUEST)
     payload = {
-                'email': user.email,
-                'first_name' : user.first_name,
-                'last_name' : user.last_name 
-            }
+        'email': user.email,
+        'first_name': user.first_name,
+        'last_name': user.last_name
+    }
     jwt_token = jwt.encode(payload, jwtKey)
-    
+
     return Response(jwt_token,
                     status=status.HTTP_200_OK)

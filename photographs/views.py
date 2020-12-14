@@ -4,37 +4,41 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework import status
 from bson import ObjectId
 from .custom_storage import MediaStorage
+from .serializers import PhotoSerializer
+from .models import Image
 import datetime
 import jwt
 import os
-    
 
-@api_view(['POST'])
+
+@api_view(['GET', 'POST'])
 def upload_photo(request):
-    file_obj = request.FILES['image']
-    
+    if request.method == 'GET':
+        user_id = request.query_params.get('user_id')
+        data = Image.objects.all()
+        if user_id:
+            data = data.filter(user_id=user_id)
+        serializer = PhotoSerializer(
+            data, context={'request': request}, many=True)
+        return Response(serializer.data)
 
-    # do your validation here e.g. file size/type check
-    
-    # organize a path for the file in bucket
-    
+    elif request.method == 'POST':
 
-    media_storage = MediaStorage()
+        data = {}
+        data['user_id'] = request.data.get('user_id')
+        file = request.FILES.get('image')
 
-    if not media_storage.exists("bhangra"): # avoid overwriting existing file
-        media_storage.save("bhangra", file_obj)
-        file_url = media_storage.url("bhangra")
-        print(file_url)
+        # do your validation here e.g. file size/type check
 
-        return Response({
-            'message': 'OK',
-            'fileUrl': file_url,
-        })
-    else:
-        return Response({
-            'message': 'Error: file {filename} already exists at {file_directory} in bucket {bucket_name}'.format(
-                filename=file_obj.name,
-                file_directory="photos",
-                bucket_name=media_storage.bucket_name
-            ),
-        }, status=400)
+        # organize a path for the file in bucket
+
+        media_storage = MediaStorage()
+        filename = "image" + datetime.datetime.utcnow().strftime('%Y-%m-%d %H:%M:%S.%f')
+        media_storage.save(filename, file)
+        imageUrl = media_storage.url(filename)
+        data['imageUrl'] = imageUrl
+        print(data)
+        serializer = PhotoSerializer(data=data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
